@@ -32,6 +32,7 @@ const WorkExperience = () => {
       logo: sonyCslLogo,
       description: [
         "Conducted research in AI applied to the music field.",
+        <span>Published preprint: <a href="https://arxiv.org/abs/2601.09520" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 font-medium border-b border-gray-300 hover:border-primary-500 transition-colors duration-200">Towards Realistic Synthetic Data for Automatic Drum Transcription</a></span>
       ]
     },
     {
@@ -42,9 +43,9 @@ const WorkExperience = () => {
       period: "April 2024 - April 2025",
       logo: translatedLogo,
       description: [
-        <span>Researched speech and multimodal AI within the <a href="https://www.meetween.eu/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 font-medium border-b border-gray-300 hover:border-primary-500 transition-colors duration-200">Meetween</a> project. <svg className="inline w-3 h-3 ml-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg></span>,
-        <span>Co-developed the first release of <a href="https://huggingface.co/collections/meetween/speechlmm-v1-687671f454992bed468d59bf" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 font-medium border-b border-gray-300 hover:border-primary-500 transition-colors duration-200">SpeechLMM</a>, Multimodal-LLM for speech understanding and generation. <svg className="inline w-3 h-3 ml-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg></span>,
-        <span><a href="https://api.wandb.ai/links/meetween/5ruw1tie" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 font-medium border-b border-gray-300 hover:border-primary-500 transition-colors duration-200">SpeechLMM training journal</a> <svg className="inline w-3 h-3 ml-1 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg></span>
+        <span>Researched speech and multimodal AI within the <a href="https://www.meetween.eu/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 font-medium border-b border-gray-300 hover:border-primary-500 transition-colors duration-200">Meetween</a> project.</span>,
+        <span>Co-developed the first release of <a href="https://huggingface.co/collections/meetween/speechlmm-v1-687671f454992bed468d59bf" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 font-medium border-b border-gray-300 hover:border-primary-500 transition-colors duration-200">SpeechLMM</a>, Multimodal-LLM for speech understanding and generation.</span>,
+        <span><a href="https://api.wandb.ai/links/meetween/5ruw1tie" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary-600 font-medium border-b border-gray-300 hover:border-primary-500 transition-colors duration-200">SpeechLMM training journal</a></span>
       ]
     },
     {
@@ -69,7 +70,7 @@ const WorkExperience = () => {
       description: [
         "Applied Natural Language Processing (NLP) and Music Information Retrieval (MIR) to music and lyrics.",
         "Developed neural network systems for automatic song structure detection from lyrics, deployed at scale for millions of songs."
-    ]
+      ]
     }
   ]
 
@@ -83,17 +84,17 @@ const WorkExperience = () => {
         return titleLength + companyLength + descriptionLength
       })
     )
-    
+
     // Base height + dynamic height based on content
     const baseHeight = 375 // Reduced base height for more compact cards
     const contentFactor = Math.ceil(maxContentLength / 180) // 180 chars per height unit
     const dynamicHeight = baseHeight + (contentFactor * 32) // 32px per content unit (reduced from 35px)
-    
+
     // Adjust for narrow screens
     const adjustedHeight = isNarrowScreen ? dynamicHeight + 80 : dynamicHeight // Reduced from +100 to +80
-    
+
     const finalHeight = Math.min(adjustedHeight, 620) // Cap at 620px max (reduced from 650px)
-    
+
     // Apply mobile-specific 10% reduction when in mobile mode (was 15%, increased by 5%)
     return isMobile ? Math.floor(finalHeight * 0.9) : finalHeight
   }, [isNarrowScreen])
@@ -121,12 +122,12 @@ const WorkExperience = () => {
   // Component for displaying company logo or initials
   const CompanyLogo = ({ exp }) => {
     const [logoError, setLogoError] = React.useState(false)
-    
+
     // Determine size based on company and mobile state
     const isSonyCSL = exp.company === "Sony CSL"
     const isMusixmatch = exp.company === "Musixmatch"
     const isPabolo = exp.company === "Pabolo"
-    
+
     const getMobileSize = () => {
       if (isSonyCSL) {
         return { container: "w-24 h-24", image: "w-21 h-21", text: "text-xl" }
@@ -139,7 +140,7 @@ const WorkExperience = () => {
       }
       return { container: "w-16 h-16", image: "w-14 h-14", text: "text-base" }
     }
-    
+
     const getDesktopSize = () => {
       if (isSonyCSL) {
         return { container: "w-16 h-16", image: "w-14 h-14", text: "text-base" }
@@ -152,14 +153,14 @@ const WorkExperience = () => {
       }
       return { container: "w-12 h-12", image: "w-10 h-10", text: "text-sm" }
     }
-    
+
     const desktopSize = getDesktopSize()
     const mobileSize = getMobileSize()
 
     if (exp.logo && !logoError) {
       return (
         <div className={`${isMobile ? mobileSize.container : desktopSize.container} rounded-lg overflow-hidden flex items-center justify-center bg-white`}>
-          <img 
+          <img
             src={exp.logo}
             alt={`${exp.company} logo`}
             className={`${isMobile ? mobileSize.image : desktopSize.image} object-contain`}
@@ -213,17 +214,17 @@ const WorkExperience = () => {
   }, [experiences.length])
 
   return (
-    <section id="work" className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="work" className="h-[calc(100vh-1rem)] flex items-center bg-white mt-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Mobile: Horizontal swipe carousel */}
         <div className="lg:hidden">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Work Experience</h2>
-            <p className="text-sm text-gray-600 mt-4">
+          <div className="text-center mb-4 md:mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Work Experience</h2>
+            <p className="text-xs md:text-sm text-gray-600 mt-2">
               My professional journey combining research, development, and education
             </p>
           </div>
-          
+
           {/* Experience Carousel */}
           <div className="overflow-x-auto scrollbar-hide" ref={expCarouselRef}>
             <div className="flex space-x-6 px-4 pb-4">
@@ -312,13 +313,13 @@ const WorkExperience = () => {
         </div>
 
         {/* Desktop: Two-column layout */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-12 items-start">
+        <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-center">
           {/* Left Column - Title */}
           <div className="lg:col-span-4">
-            <div className="lg:sticky lg:top-24 flex flex-col justify-center min-h-[400px]">
+            <div className="flex flex-col justify-center">
               <div className="text-center lg:text-left">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Work Experience</h2>
-                <p className="text-base text-gray-600 mt-4">
+                <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Work Experience</h2>
+                <p className="text-sm lg:text-base text-gray-600 mt-2 lg:mt-3">
                   My professional journey combining research, development, and education
                 </p>
               </div>
@@ -329,39 +330,39 @@ const WorkExperience = () => {
           <div className="lg:col-span-8 relative">
             {/* Vertical timeline line */}
             <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200 -ml-6"></div>
-            
-            <div className="space-y-8">
+
+            <div className="space-y-3 lg:space-y-4">
               {experiences.map((exp, index) => (
                 <div key={exp.id} className="relative">
                   {/* Timeline dot for this experience - aligned with title */}
                   <div className="absolute left-0 top-8 w-3 h-3 bg-gray-400 rounded-full -ml-6 transform -translate-x-1/2 border-2 border-white shadow-sm"></div>
-                  
-                  <div className="card border-r-4 border-r-blue-500">
-                    <div className="flex items-start space-x-4">
+
+                  <div className="card border-r-4 border-r-blue-500 py-3 lg:py-4">
+                    <div className="flex items-start space-x-3 lg:space-x-4">
                       <div className="flex-shrink-0">
                         <CompanyLogo exp={exp} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-900">{exp.title}</h3>
-                            <p className="text-base text-primary-600 font-medium">{exp.company}</p>
+                            <h3 className="text-sm lg:text-base font-semibold text-gray-900">{exp.title}</h3>
+                            <p className="text-xs lg:text-sm text-primary-600 font-medium">{exp.company}</p>
                           </div>
-                          <div className="mt-2 md:mt-0 flex flex-col md:items-end text-sm text-gray-500">
-                            <div className="flex items-center mb-1">
-                              <Calendar className="h-4 w-4 mr-1" />
+                          <div className="mt-1 md:mt-0 flex flex-col md:items-end text-xs text-gray-500">
+                            <div className="flex items-center mb-0.5">
+                              <Calendar className="h-3 w-3 mr-1" />
                               {exp.period}
                             </div>
                             <div className="flex items-center">
-                              <MapPin className="h-4 w-4 mr-1" />
+                              <MapPin className="h-3 w-3 mr-1" />
                               {exp.location}
                             </div>
                           </div>
                         </div>
-                        <ul className="space-y-2">
+                        <ul className="space-y-1 lg:space-y-1.5">
                           {exp.description.map((item, index) => (
-                            <li key={index} className="text-gray-700 flex items-start">
-                              <span className="flex-shrink-0 w-2 h-2 bg-primary-400 rounded-full mt-2 mr-3"></span>
+                            <li key={index} className="text-xs lg:text-sm text-gray-700 flex items-start">
+                              <span className="flex-shrink-0 w-1.5 h-1.5 bg-primary-400 rounded-full mt-1.5 mr-2"></span>
                               {item}
                             </li>
                           ))}

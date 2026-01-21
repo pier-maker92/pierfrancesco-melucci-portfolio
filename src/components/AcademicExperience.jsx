@@ -195,13 +195,13 @@ const AcademicExperience = () => {
   }, [education.length])
 
   return (
-    <section id="academic" className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="academic" className="h-[calc(100vh-1rem)] flex items-center bg-white mt-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Mobile: Horizontal swipe carousel */}
         <div className="lg:hidden">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Academic Experience</h2>
-            <p className="text-sm text-gray-600 mt-4">
+          <div className="text-center mb-4 md:mb-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Academic Experience</h2>
+            <p className="text-xs md:text-sm text-gray-600 mt-2">
               My educational journey and academic achievements
             </p>
           </div>
@@ -285,13 +285,13 @@ const AcademicExperience = () => {
         </div>
 
         {/* Desktop: Two-column layout */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-12 items-start">
+        <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-center">
           {/* Left Column - Title */}
           <div className="lg:col-span-4">
-            <div className="lg:sticky lg:top-24 flex flex-col justify-center min-h-[400px]">
+            <div className="flex flex-col justify-center">
               <div className="text-center lg:text-left">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Academic Experience</h2>
-                <p className="text-base text-gray-600 mt-4">
+                <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Academic Experience</h2>
+                <p className="text-sm lg:text-base text-gray-600 mt-2 lg:mt-3">
                   My educational journey and academic achievements
                 </p>
               </div>
@@ -304,39 +304,39 @@ const AcademicExperience = () => {
             <div className="absolute left-0 top-0 bottom-0 w-px bg-gray-200 -ml-6"></div>
 
             {/* Education */}
-            <div className="mb-16">
-              <h3 className="text-xl font-bold text-gray-900 mb-8 flex items-center">
-                <GraduationCap className="h-5 w-5 mr-3 text-primary-600" />
+            <div className="mb-4 lg:mb-6">
+              <h3 className="text-base lg:text-lg font-bold text-gray-900 mb-3 lg:mb-4 flex items-center">
+                <GraduationCap className="h-3 w-3 lg:h-4 lg:w-4 mr-2 text-primary-600" />
                 Education
               </h3>
-              <div className="space-y-6">
+              <div className="space-y-3 lg:space-y-4">
                 {education.map((edu, index) => (
                   <div key={edu.id} className="relative">
                     {/* Timeline dot for this education - aligned with title */}
                     <div className="absolute left-0 top-8 w-3 h-3 bg-gray-400 rounded-full -ml-6 transform -translate-x-1/2 border-2 border-white shadow-sm"></div>
                     
-                    <div className="card border-r-4 border-r-purple-500">
-                      <div className="flex items-start space-x-4">
+                    <div className="card border-r-4 border-r-purple-500 py-3 lg:py-4">
+                      <div className="flex items-start space-x-3 lg:space-x-4">
                         <div className="flex-shrink-0">
                           <InstitutionLogo edu={edu} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
                             <div>
-                              <h4 className="text-lg font-semibold text-gray-900">{edu.degree}</h4>
-                              <p className="text-base text-primary-600 font-medium">{edu.institution}</p>
-                              <p className="text-gray-600">{edu.location}</p>
+                              <h4 className="text-sm lg:text-base font-semibold text-gray-900">{edu.degree}</h4>
+                              <p className="text-xs lg:text-sm text-primary-600 font-medium">{edu.institution}</p>
+                              <p className="text-xs text-gray-600">{edu.location}</p>
                             </div>
-                            <div className="mt-2 md:mt-0 text-right">
-                              <p className="text-sm text-gray-500">{edu.period}</p>
+                            <div className="mt-1 md:mt-0 text-right">
+                              <p className="text-xs text-gray-500">{edu.period}</p>
                             </div>
                           </div>
-                          <p className="text-gray-700 mb-2">{edu.description}</p>
+                          <p className="text-xs lg:text-sm text-gray-700 mb-1.5">{edu.description}</p>
                           {edu.advisor && (
-                            <p className="text-sm text-gray-600">Advisor: {edu.advisor}</p>
+                            <p className="text-xs text-gray-600">Advisor: {edu.advisor}</p>
                           )}
                           {edu.gpa && (
-                            <p className="text-sm text-gray-600">{edu.gpa}</p>
+                            <p className="text-xs text-gray-600">{edu.gpa}</p>
                           )}
                         </div>
                       </div>

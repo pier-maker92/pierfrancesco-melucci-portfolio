@@ -3,13 +3,10 @@ import { Menu, X } from 'lucide-react'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
   const [currentSection, setCurrentSection] = useState('About')
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-      
       // Update current section based on scroll position
       const sections = [
         { id: 'hero', name: 'About' },
@@ -19,7 +16,7 @@ const Header = () => {
         { id: 'music', name: 'Music' }
       ]
       
-      const scrollPosition = window.scrollY + 100 // Offset for header height
+      const scrollPosition = window.scrollY + 100
       
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i].id)
@@ -45,53 +42,78 @@ const Header = () => {
   const scrollToSection = (href) => {
     const element = document.querySelector(href)
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      // On mobile, center the section vertically
+      const isMobile = window.innerWidth < 1024
+      if (isMobile && (href === '#publications' || href === '#music')) {
+        const elementTop = element.offsetTop
+        const elementHeight = element.offsetHeight
+        const windowHeight = window.innerHeight
+        // Center the section vertically in the viewport
+        const scrollPosition = elementTop - (windowHeight / 2) + (elementHeight / 2)
+        
+        window.scrollTo({
+          top: Math.max(0, scrollPosition),
+          behavior: 'smooth'
+        })
+      } else {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
     }
     setIsMenuOpen(false)
   }
 
   return (
-    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white shadow-md' : 'bg-white/90 backdrop-blur-sm'
-    }`}>
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          <div className="flex-shrink-0">
+    <>
+      {/* Desktop Vertical Sidebar */}
+      <header className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-50 flex-col">
+        <nav className="flex flex-col h-full py-8 px-6">
+          <div className="mb-8">
             <h1 className="text-xl font-bold text-gray-900">
               {currentSection}
             </h1>
           </div>
           
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {navItems.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300"
-                >
-                  {item.name}
-                </button>
-              ))}
+          <div className="flex flex-col space-y-2 flex-1">
+            {navItems.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => scrollToSection(item.href)}
+                className={`text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
+                  currentSection === item.name
+                    ? 'bg-primary-50 text-primary-700 border-l-4 border-primary-600'
+                    : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                }`}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+        </nav>
+      </header>
+
+      {/* Mobile Horizontal Header */}
+      <header className="md:hidden fixed top-0 w-full z-50 bg-white shadow-md">
+        <nav className="w-full px-4 sm:px-6">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex-shrink-0">
+              <h1 className="text-xl font-bold text-gray-900">
+                {currentSection}
+              </h1>
+            </div>
+            
+            <div>
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="bg-gray-200 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+              >
+                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
             </div>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="bg-gray-200 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
               {navItems.map((item) => (
                 <button
                   key={item.name}
@@ -102,10 +124,10 @@ const Header = () => {
                 </button>
               ))}
             </div>
-          </div>
-        )}
-      </nav>
-    </header>
+          )}
+        </nav>
+      </header>
+    </>
   )
 }
 

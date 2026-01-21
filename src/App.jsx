@@ -9,16 +9,18 @@ import Footer from './components/Footer'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100">
       <Header />
-      <main>
-        <Hero />
-        <WorkExperience />
-        <Publications />
-        <AcademicExperience />
-        <Music />
-      </main>
-      <Footer />
+      <div className="w-full md:ml-64 lg:w-[70vw] lg:ml-[calc(128px+15vw)]">
+        <main>
+          <Hero />
+          <WorkExperience />
+          <Publications />
+          <AcademicExperience />
+          <Music />
+        </main>
+        <Footer />
+      </div>
     </div>
   )
 }
