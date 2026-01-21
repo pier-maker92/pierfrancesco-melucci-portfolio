@@ -15,9 +15,9 @@ const Header = () => {
         { id: 'academic', name: 'Academic Experience' },
         { id: 'music', name: 'Music' }
       ]
-      
+
       const scrollPosition = window.scrollY + 100
-      
+
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i].id)
         if (section && section.offsetTop <= scrollPosition) {
@@ -26,7 +26,7 @@ const Header = () => {
         }
       }
     }
-    
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -50,7 +50,7 @@ const Header = () => {
         const windowHeight = window.innerHeight
         // Center the section vertically in the viewport
         const scrollPosition = elementTop - (windowHeight / 2) + (elementHeight / 2)
-        
+
         window.scrollTo({
           top: Math.max(0, scrollPosition),
           behavior: 'smooth'
@@ -69,20 +69,19 @@ const Header = () => {
         <nav className="flex flex-col h-full py-8 px-6">
           <div className="mb-8">
             <h1 className="text-xl font-bold text-gray-900">
-              {currentSection}
+              {currentSection === 'Academic Experience' ? '🎓 Experience' : currentSection}
             </h1>
           </div>
-          
+
           <div className="flex flex-col space-y-2 flex-1">
             {navItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className={`text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
-                  currentSection === item.name
-                    ? 'bg-primary-50 text-primary-700 border-l-4 border-primary-600'
-                    : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
-                }`}
+                className={`text-left px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${currentSection === item.name
+                  ? 'bg-primary-50 text-primary-700 border-l-4 border-primary-600'
+                  : 'text-gray-600 hover:text-primary-600 hover:bg-gray-50'
+                  }`}
               >
                 {item.name}
               </button>
@@ -97,10 +96,10 @@ const Header = () => {
           <div className="flex justify-between items-center py-4">
             <div className="flex-shrink-0">
               <h1 className="text-xl font-bold text-gray-900">
-                {currentSection}
+                {currentSection === 'Academic Experience' ? 'Academic' : currentSection}
               </h1>
             </div>
-            
+
             <div>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
