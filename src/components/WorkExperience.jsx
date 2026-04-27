@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { Calendar, MapPin } from 'lucide-react'
 import sonyCslLogo from '../assets/companies/sony-csl-logo.jpg'
+import milaLogo from '../assets/companies/mila-logo.avif'
 import translatedLogo from '../assets/companies/translated-logo.png'
 import paboloLogo from '../assets/companies/pabolo-logo.png'
 import musixmatchLogo from '../assets/companies/musixmatch-logo.png'
@@ -25,10 +26,21 @@ const WorkExperience = () => {
   const experiences = [
     {
       id: 1,
+      title: "Research Intern",
+      company: "Mila",
+      location: "Montreal, Canada",
+      period: "April 2026 - October 2026",
+      logo: milaLogo,
+      description: [
+        "Research internship in speech and audio tokenization.",
+      ]
+    },
+    {
+      id: 2,
       title: "Research Assistant",
       company: "Sony CSL",
       location: "Tokyo, Japan",
-      period: "July 2025 - Present",
+      period: "July 2025 - October 2025",
       logo: sonyCslLogo,
       description: [
         "Conducted research in AI applied to the music field.",
@@ -36,7 +48,7 @@ const WorkExperience = () => {
       ]
     },
     {
-      id: 2,
+      id: 3,
       title: "Research Scientist",
       company: "Translated",
       location: "Rome, Italy",
@@ -49,7 +61,7 @@ const WorkExperience = () => {
       ]
     },
     {
-      id: 3,
+      id: 4,
       title: "AI Engineer",
       company: "Pabolo",
       location: "Karlsruhe, Germany",
@@ -61,7 +73,7 @@ const WorkExperience = () => {
       ]
     },
     {
-      id: 4,
+      id: 5,
       title: "Data Scientist",
       company: "Musixmatch",
       location: "Bologna, Italy",
@@ -125,11 +137,12 @@ const WorkExperience = () => {
 
     // Determine size based on company and mobile state
     const isSonyCSL = exp.company === "Sony CSL"
+    const isMila = exp.company === "Mila"
     const isMusixmatch = exp.company === "Musixmatch"
     const isPabolo = exp.company === "Pabolo"
 
     const getMobileSize = () => {
-      if (isSonyCSL) {
+      if (isSonyCSL || isMila) {
         return { container: "w-24 h-24", image: "w-21 h-21", text: "text-xl" }
       }
       if (isMusixmatch) {
@@ -142,7 +155,7 @@ const WorkExperience = () => {
     }
 
     const getDesktopSize = () => {
-      if (isSonyCSL) {
+      if (isSonyCSL || isMila) {
         return { container: "w-16 h-16", image: "w-14 h-14", text: "text-base" }
       }
       if (isMusixmatch) {
@@ -221,7 +234,7 @@ const WorkExperience = () => {
           <div className="text-center mb-4 md:mb-6">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900">Work Experience</h2>
             <p className="text-xs md:text-sm text-gray-600 mt-2">
-              My professional journey combining research, development, and education
+              My professional journey combining research and development
             </p>
           </div>
 
@@ -320,7 +333,7 @@ const WorkExperience = () => {
               <div className="text-center lg:text-left">
                 <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Work Experience</h2>
                 <p className="text-sm lg:text-base text-gray-600 mt-2 lg:mt-3">
-                  My professional journey combining research, development, and education
+                  My professional journey combining research and development
                 </p>
               </div>
             </div>
