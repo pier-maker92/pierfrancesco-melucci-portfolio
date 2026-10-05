@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DiCodec Demo</title>
+  <script>
+    const initialTheme = localStorage.getItem("dicodec-theme");
+    if (initialTheme && initialTheme !== "system") {
+      document.documentElement.setAttribute("data-theme", initialTheme);
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="theme-control" aria-label="Theme selector">
+    <label for="theme-select">Theme</label>
+    <select id="theme-select">
+      <option value="system">System</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </div>
+
+  <main>
+    <header class="hero">
+      <h1>DiCodec: continuous speech codec</h1>
+      <p class="caption">
+        Qualitative demo for reconstruction, zero-shot voice conversion, and continuous autoregressive TTS.
+      </p>
+    </header>
+
+    <p>
+      DiCodec is a continuous speech codec designed to represent speech with
+      a global speaker embedding and a sequence of local continuous content tokens. Unlike
+      discrete audio tokenizers, which trade acoustic fidelity for shorter token sequences,
+      DiCodec targets ultra-low frame-rate continuous representations while preserving
+      reconstruction quality and supporting downstream generation.
+    </p>
+    <p>
+      In this demo, the same speech samples are encoded with temporal compression ratios of
+      <strong>4x</strong>, <strong>8x</strong>, and <strong>16x</strong>, yielding
+      local-token rates of 23.44 Hz, 11.72 Hz, and 5.86 Hz, reported below as
+      approximately <strong>23.5 Hz</strong>, <strong>12 Hz</strong>, and
+      <strong>6 Hz</strong>. These settings illustrate how continuous local tokens can
+      remain useful even when the latent sequence is compressed to only a few frames per second.
+    </p>
+
+    <section>
+      <h2>Reconstruction</h2>
+      <div class="paper-caption">
+        <strong>Table 1:</strong> Reconstruction and TTS evaluation on LibriSpeech
+        test-clean. Bold indicates the best overall result, while underlined values
+        indicate the best result within each frame-rate group.
+      </div>
+      <table class="paper-table">
+        <tr class="top-rule">
+          <th rowspan="2" class="left">Codec</th>
+          <th rowspan="2">Frame Rate</th>
+          <th colspan="3" class="vbar-left vbar-right">Reconstruction</th>
+          <th colspan="3">TTS</th>
+        </tr>
+        <tr class="mid-rule">
+          <th class="vbar-left">UTMOS ↑</th>
+          <th>dWER ↓</th>
+          <th class="vbar-right">Sim ↑</th>
+          <th>UTMOS ↑</th>
+          <th>dWER ↓</th>
+          <th>Sim ↑</th>
+        </tr>
+        <tr class="section-row">
+          <td colspan="8">80 Hz</td>
+        </tr>
+        <tr>
+          <td class="left">BigCodec</td>
+          <td>80 Hz</td>
+          <td class="vbar-left">4.11</td>
+          <td>2.55</td>
+          <td class="vbar-right"><strong>98.5</strong></td>
+          <td>3.43</td>
+          <td>54.43</td>
+          <td>89.4</td>
+        </tr>
+        <tr class="section-row">
+          <td colspan="8">40--50 Hz</td>
+        </tr>
+        <tr>
+          <td class="left">WavLM6-KM</td>
+          <td>50 Hz</td>
+          <td class="vbar-left">3.75</td>
+          <td><span class="underline">6.20</span></td>
+          <td class="vbar-right">90.0</td>
+          <td><span class="underline">3.74</span></td>
+          <td><span class="underline">38.67</span></td>
+          <td>88.7</td>
+        </tr>
+        <tr>
+          <td class="left">SemantiCodec</td>
+          <td>50 Hz</td>
+          <td class="vbar-left">2.91</td>
+          <td>8.97</td>
+          <td class="vbar-right"><span class="underline">96.0</span></td>
+          <td>2.82</td>
+          <td>48.38</td>
+          <td>91.4</td>
+        </tr>
+        <tr>
+          <td class="left">WavTokenizer</td>
+          <td>40 Hz</td>
+          <td class="vbar-left"><span class="underline">3.78</span></td>
+          <td>11.55</td>
+          <td class="vbar-right">95.4</td>
+          <td>3.68</td>
+          <td>47.56</td>
+          <td><span class="underline">92.8</span></td>
+        </tr>
+        <tr class="section-row">
+          <td colspan="8">25 Hz</td>
+        </tr>
+        <tr>
+          <td class="left">Stable Codec</td>
+          <td>25 Hz</td>
+          <td class="vbar-left"><strong>4.32</strong></td>
+          <td>4.97</td>
+          <td class="vbar-right">94.7</td>
+          <td>3.19</td>
+          <td>49.28</td>
+          <td>88.8</td>
+        </tr>
+        <tr>
+          <td class="left">FocalCodec</td>
+          <td>25 Hz</td>
+          <td class="vbar-left">4.14</td>
+          <td>3.30</td>
+          <td class="vbar-right">96.3</td>
+          <td>4.16</td>
+          <td>16.75</td>
+          <td><span class="underline">91.6</span></td>
+        </tr>
+        <tr>
+          <td class="left"><strong>DiCodec</strong></td>
+          <td>23.5 Hz</td>
+          <td class="vbar-left">3.90</td>
+          <td><strong>1.10</strong></td>
+          <td class="vbar-right"><span class="underline">98.1</span></td>
+          <td><strong>4.26</strong></td>
+          <td><span class="underline">4.69</span></td>
+          <td>91.3</td>
+        </tr>
+        <tr class="section-row">
+          <td colspan="8">12.5 Hz</td>
+        </tr>
+        <tr>
+          <td class="left">FocalCodec</td>
+          <td>12.5 Hz</td>
+          <td class="vbar-left"><span class="underline">4.22</span></td>
+          <td>7.94</td>
+          <td class="vbar-right">93.9</td>
+          <td>4.12</td>
+          <td>21.59</td>
+          <td>90.8</td>
+        </tr>
+        <tr>
+          <td class="left"><strong>DiCodec</strong></td>
+          <td>12 Hz</td>
+          <td class="vbar-left">3.90</td>
+          <td><span class="underline">1.15</span></td>
+          <td class="vbar-right"><span class="underline">98.2</span></td>
+          <td><span class="underline">4.20</span></td>
+          <td><strong>4.33</strong></td>
+          <td><span class="underline">93.2</span></td>
+        </tr>
+        <tr class="section-row">
+          <td colspan="8">6 Hz</td>
+        </tr>
+        <tr class="bottom-rule">
+          <td class="left"><strong>DiCodec</strong></td>
+          <td>6 Hz</td>
+          <td class="vbar-left">3.97</td>
+          <td>1.66</td>
+          <td class="vbar-right">97.7</td>
+          <td>4.19</td>
+          <td>4.97</td>
+          <td><strong>94.6</strong></td>
+        </tr>
+      </table>
+
+      <p>
+        We evaluate reconstruction and TTS on LibriSpeech test-clean using UTMOS,
+        dWER, and speaker similarity. For TTS, we add a small modular diffusion head
+        that can be attached to any autoregressive backbone, and compare DiCodec
+        against discrete-token baselines under the same evaluation protocol. DiCodec
+        achieves the lowest dWER within the 25 Hz and 12.5 Hz groups, remains
+        competitive at 6 Hz, and shows that continuous, disentangled tokens preserve
+        intelligibility and speaker identity at very low temporal resolution. The TTS
+        evaluation in this table is an intentionally extreme condition: we use a
+        compact Llama 3 autoregressive model with approximately 45M parameters, 12
+        layers, 4 attention heads, character-level tokenization, and only 460 hours of
+        training audio from the LibriSpeech clean-100 and clean-360 partitions. In this
+        setting, the representation is especially stable as the frame rate decreases,
+        suggesting that shorter continuous latent sequences make autoregressive
+        modeling easier without collapsing acoustic quality.
+      </p>
+
+      <div class="audio-grid reconstruction">
+        <div class="grid-header">Reference</div>
+        <div class="grid-header">23.5 Hz</div>
+        <div class="grid-header">12 Hz</div>
+        <div class="grid-header">6 Hz</div>
+      </div>
+
+      <h3>Sample 1</h3>
+      <div class="audio-grid reconstruction">
+        <audio controls src="assets/audio_v2/25/male.wav"></audio>
+        <audio controls src="assets/audio_v2/25/male_reconstruction.wav"></audio>
+        <audio controls src="assets/audio_v2/12_5/male_reconstruction.wav"></audio>
+        <audio controls src="assets/audio_v2/6_25/male_reconstruction.wav"></audio>
+      </div>
+      <hr />
+
+      <h3>Sample 2</h3>
+      <div class="audio-grid reconstruction">
+        <audio controls src="assets/audio_v2/25/female.wav"></audio>
+        <audio controls src="assets/audio_v2/25/female_reconstruction.wav"></audio>
+        <audio controls src="assets/audio_v2/12_5/female_reconstruction.wav"></audio>
+        <audio controls src="assets/audio_v2/6_25/female_reconstruction.wav"></audio>
+      </div>
+      <hr />
+
+      <h3>Sample 3</h3>
+      <div class="audio-grid reconstruction">
+        <audio controls src="assets/audio_v2/25/podcast_voice.wav"></audio>
+        <audio controls src="assets/audio_v2/25/podcast_voice_reconstruction.wav"></audio>
+        <audio controls src="assets/audio_v2/12_5/podcast_voice_reconstruction.wav"></audio>
+        <audio controls src="assets/audio_v2/6_25/podcast_voice_reconstruction.wav"></audio>
+      </div>
+    </section>
+
+    <section>
+      <h2>Zero-shot voice conversion</h2>
+      <p>
+        Zero-shot voice conversion keeps the local continuous content tokens from the
+        source utterance and replaces the global speaker embedding.
+      </p>
+
+      <div data-frame-rate="25">
+        <h3>23.5 Hz</h3>
+        <div class="audio-grid conversion">
+          <div class="grid-header">Source</div>
+          <div class="grid-header">Reference</div>
+          <div class="grid-header">To Sample 1</div>
+          <div class="grid-header">To Sample 2</div>
+          <div class="grid-header">To Sample 3</div>
+          <div class="cell-label">Sample 1</div>
+          <audio controls src="assets/audio_v2/25/male.wav"></audio>
+          <div></div>
+          <audio controls src="assets/audio_v2/25/male_swap_female.wav"></audio>
+          <audio controls src="assets/audio_v2/25/male_swap_podcast_voice.wav"></audio>
+          <div class="cell-label">Sample 2</div>
+          <audio controls src="assets/audio_v2/25/female.wav"></audio>
+          <audio controls src="assets/audio_v2/25/female_swap_male.wav"></audio>
+          <div></div>
+          <audio controls src="assets/audio_v2/25/female_swap_podcast_voice.wav"></audio>
+          <div class="cell-label">Sample 3</div>
+          <audio controls src="assets/audio_v2/25/podcast_voice.wav"></audio>
+          <audio controls src="assets/audio_v2/25/podcast_voice_swap_male.wav"></audio>
+          <audio controls src="assets/audio_v2/25/podcast_voice_swap_female.wav"></audio>
+          <div></div>
+        </div>
+      </div>
+
+      <div data-frame-rate="12_5">
+        <h3>12 Hz</h3>
+        <div class="audio-grid conversion">
+          <div class="grid-header">Source</div>
+          <div class="grid-header">Reference</div>
+          <div class="grid-header">To Sample 1</div>
+          <div class="grid-header">To Sample 2</div>
+          <div class="grid-header">To Sample 3</div>
+          <div class="cell-label">Sample 1</div>
+          <audio controls src="assets/audio_v2/12_5/male.wav"></audio>
+          <div></div>
+          <audio controls src="assets/audio_v2/12_5/male_swap_female.wav"></audio>
+          <audio controls src="assets/audio_v2/12_5/male_swap_podcast_voice.wav"></audio>
+          <div class="cell-label">Sample 2</div>
+          <audio controls src="assets/audio_v2/12_5/female.wav"></audio>
+          <audio controls src="assets/audio_v2/12_5/female_swap_male.wav"></audio>
+          <div></div>
+          <audio controls src="assets/audio_v2/12_5/female_swap_podcast_voice.wav"></audio>
+          <div class="cell-label">Sample 3</div>
+          <audio controls src="assets/audio_v2/12_5/podcast_voice.wav"></audio>
+          <audio controls src="assets/audio_v2/12_5/podcast_voice_swap_male.wav"></audio>
+          <audio controls src="assets/audio_v2/12_5/podcast_voice_swap_female.wav"></audio>
+          <div></div>
+        </div>
+      </div>
+
+      <div data-frame-rate="6_25">
+        <h3>6 Hz</h3>
+        <div class="audio-grid conversion">
+          <div class="grid-header">Source</div>
+          <div class="grid-header">Reference</div>
+          <div class="grid-header">To Sample 1</div>
+          <div class="grid-header">To Sample 2</div>
+          <div class="grid-header">To Sample 3</div>
+          <div class="cell-label">Sample 1</div>
+          <audio controls src="assets/audio_v2/6_25/male.wav"></audio>
+          <div></div>
+          <audio controls src="assets/audio_v2/6_25/male_swap_female.wav"></audio>
+          <audio controls src="assets/audio_v2/6_25/male_swap_podcast_voice.wav"></audio>
+          <div class="cell-label">Sample 2</div>
+          <audio controls src="assets/audio_v2/6_25/female.wav"></audio>
+          <audio controls src="assets/audio_v2/6_25/female_swap_male.wav"></audio>
+          <div></div>
+          <audio controls src="assets/audio_v2/6_25/female_swap_podcast_voice.wav"></audio>
+          <div class="cell-label">Sample 3</div>
+          <audio controls src="assets/audio_v2/6_25/podcast_voice.wav"></audio>
+          <audio controls src="assets/audio_v2/6_25/podcast_voice_swap_male.wav"></audio>
+          <audio controls src="assets/audio_v2/6_25/podcast_voice_swap_female.wav"></audio>
+          <div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Text-to-speech</h2>
+      <p>
+        For this qualitative TTS demo we use a stronger autoregressive diffusion model
+        with approximately 200M parameters. The model generates 6 Hz continuous DiCodec
+        tokens, using <strong>character</strong> tokenization and training only on the
+        LibriSpeech clean-100 and clean-360 <strong>partitions</strong>. The tokens are
+        decoded with the speaker embedding extracted from Sample 1. The table reports
+        the 6 Hz TTS results.
+      </p>
+
+      <div class="paper-caption">
+        <strong>Table 2:</strong> Reconstruction and autoregressive TTS performance
+        of continuous speech representations on LibriSpeech test-clean. TTS training
+        hours refer to the data used to train the autoregressive model. Bold indicates
+        the best result within each evaluation block.
+      </div>
+      <table class="paper-table">
+        <tr class="section-row">
+          <td colspan="7">Reconstruction</td>
+        </tr>
+        <tr class="mid-rule">
+          <th class="left">Codec</th>
+          <th>Rep. Rate</th>
+          <th></th>
+          <th></th>
+          <th>dWER ↓</th>
+          <th>UTMOS ↑</th>
+          <th>Sim ↑</th>
+        </tr>
+        <tr>
+          <td class="left">PocketTTS</td>
+          <td>12.5 Hz</td>
+          <td></td>
+          <td></td>
+          <td>2.04</td>
+          <td><strong>4.14</strong></td>
+          <td>97.7</td>
+        </tr>
+        <tr>
+          <td class="left">CuteTTS</td>
+          <td>12.5 Hz</td>
+          <td></td>
+          <td></td>
+          <td>1.20</td>
+          <td>4.04</td>
+          <td><strong>99.2</strong></td>
+        </tr>
+        <tr>
+          <td class="left"><strong>DiCodec</strong></td>
+          <td>12 Hz</td>
+          <td></td>
+          <td></td>
+          <td><strong>1.15</strong></td>
+          <td>3.90</td>
+          <td>98.2</td>
+        </tr>
+        <tr>
+          <td class="left"><strong>DiCodec</strong></td>
+          <td>6 Hz</td>
+          <td></td>
+          <td></td>
+          <td>1.66</td>
+          <td>3.97</td>
+          <td>97.7</td>
+        </tr>
+        <tr class="section-row">
+          <td colspan="7">Autoregressive TTS</td>
+        </tr>
+        <tr class="mid-rule">
+          <th class="left">Model</th>
+          <th>Rep. Rate</th>
+          <th>AR Rate</th>
+          <th>Train h</th>
+          <th>WER ↓</th>
+          <th>UTMOS ↑</th>
+          <th>Sim ↑</th>
+        </tr>
+        <tr>
+          <td class="left">PocketTTS</td>
+          <td>12.5 Hz</td>
+          <td>12.5 Hz</td>
+          <td>88k</td>
+          <td>3.49</td>
+          <td>4.17</td>
+          <td>95.5</td>
+        </tr>
+        <tr>
+          <td class="left">CuteTTS</td>
+          <td>12.5 Hz</td>
+          <td>6.25 Hz</td>
+          <td>550k</td>
+          <td>3.72</td>
+          <td>4.05</td>
+          <td><strong>97.2</strong></td>
+        </tr>
+        <tr class="bottom-rule">
+          <td class="left"><strong>DiCodec</strong></td>
+          <td>6 Hz</td>
+          <td>6 Hz</td>
+          <td>460</td>
+          <td><strong>2.89</strong></td>
+          <td><strong>4.20</strong></td>
+          <td>94.6</td>
+        </tr>
+      </table>
+
+      <div class="tts-example">
+        <p><strong>1. The warm sun poured over the soft grass as I settled into my favorite hammock.</strong></p>
+        <audio controls src="assets/audio_v2/tts_male_6_25_l/sample_0.wav"></audio>
+      </div>
+      <hr />
+      <div class="tts-example">
+        <p><strong>2. Get out of my way, I won’t hesitate to push through anyone who stands in my path!</strong></p>
+        <audio controls src="assets/audio_v2/tts_male_6_25_l/sample_1.wav"></audio>
+      </div>
+      <hr />
+      <div class="tts-example">
+        <p><strong>3. I heard a strange noise in the dark, and my heart raced as I fumbled for the light
+            switch.</strong></p>
+        <audio controls src="assets/audio_v2/tts_male_6_25_l/sample_2.wav"></audio>
+      </div>
+    </section>
+  </main>
+  <script>
+    const themeSelect = document.getElementById("theme-select");
+    const storedTheme = localStorage.getItem("dicodec-theme") || "system";
+
+    function applyTheme(theme) {
+      if (theme === "system") {
+        document.documentElement.removeAttribute("data-theme");
+      } else {
+        document.documentElement.setAttribute("data-theme", theme);
+      }
+    }
+
+    themeSelect.value = storedTheme;
+    applyTheme(storedTheme);
+
+    themeSelect.addEventListener("change", (event) => {
+      const theme = event.target.value;
+      localStorage.setItem("dicodec-theme", theme);
+      applyTheme(theme);
+    });
+  </script>
+</body>
+
+</html>
